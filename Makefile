@@ -1,3 +1,4 @@
+#* Author:   Peter Fleury <pfleury@gmx.ch>
 # ----------------------------------------------------------------------------
 # Makefile to compile and link the I2C Master library and test program
 # make          = build software

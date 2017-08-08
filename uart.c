@@ -1,4 +1,4 @@
-
+// * Copyright (C) 2011 Enrico Rossi
 #include <avr/io.h>
 #include "uart.h"
 

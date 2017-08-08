@@ -1,4 +1,7 @@
-; DESCRIPTION
+
+
+; * Author:   Peter Fleury <pfleury@gmx.ch>
+;DESCRIPTION
 ; 	Basic routines for communicating with I2C slave devices. This
 ;	"single" master implementation is limited to one bus master on the
 ;	I2C bus. 

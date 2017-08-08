@@ -1,3 +1,6 @@
+//* Author:   Peter Fleury <pfleury@gmx.ch>
+
+
 #ifndef _I2CMASTER_H
 #define _I2CMASTER_H
 

@@ -1,4 +1,5 @@
 
+// * Copyright (C) 2011 Enrico Rossi
 
 #ifndef _UART_H_
 #define _UART_H_
