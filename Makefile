@@ -1,4 +1,5 @@
 #* Author:   Peter Fleury <pfleury@gmx.ch>
+# http://homepage.hispeed.ch/peterfleury/avr-software.html 
 # ----------------------------------------------------------------------------
 # Makefile to compile and link the I2C Master library and test program
 # make          = build software

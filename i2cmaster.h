@@ -1,5 +1,6 @@
-//* Author:   Peter Fleury <pfleury@gmx.ch>
-
+/* Author:   Peter Fleury <pfleury@gmx.ch>
+http://homepage.hispeed.ch/peterfleury/avr-software.html
+*/
 
 #ifndef _I2CMASTER_H
 #define _I2CMASTER_H
