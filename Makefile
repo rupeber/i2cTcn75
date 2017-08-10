@@ -12,7 +12,7 @@ MCU = atmega128
 
 
 # Processor frequency.
-F_CPU = 11059200
+F_CPU = 8000000
 
 
 # Target file name (without extension).
@@ -20,7 +20,7 @@ TARGET =  test_i2cmaster
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c uart.c
+SRC = $(TARGET).c 
 
 
 # List Assembler source files here.

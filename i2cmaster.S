@@ -28,8 +28,8 @@
 
 
 ;
-#define SDA             7           // SDA Port D  
-#define SCL             6           // SCL Port D
+#define SDA             5           // SDA Port D  
+#define SCL             4           // SCL Port D
 #define SDA_PORT        PORTD       // SDA Port D
 #define SCL_PORT        PORTD       // SCL Port D         
 

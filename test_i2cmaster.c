@@ -1,27 +1,21 @@
 
 #include <avr/io.h>
 #include "i2cmaster.h"
-#include "uart.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
 #include <i2cmaster.h>
+#include <util/delay.h>
 
-#define Dev  0x9e      // device address, see datasheet
-#define zero 0b10000001     // We will dislay a 0 if temperature is below limit
-#define one 0b11010111      // We will display a 1 if temperature is above limit
+
+#define Dev  0x9a      // device address, see datasheet
 
 int main(void) {
   uint8_t ret;
-  char *string;
-  char *string2;
 
-
-  DDRC=0xFF; //7led segment display 
-  uart_init(0);
-  uart_printstrn(0, "temperature ");
+  DDRB=0x60; //7led segment display 
   i2c_init();    // initialize I2C library
 
 
@@ -32,19 +26,19 @@ int main(void) {
 
     ret=i2c_readNak();
     
-    if (ret>=30){ //Limit temperature set to 30 degrees
-      PORTC=one;
+    if (ret>0 & ret<200){ //Limit temperature set to 30 degrees
+      PORTB=0b10111111;
+      _delay_ms(500);
+
+      PORTB=0b11111111;
+      _delay_ms(500);      
     }
 
     else {
-      PORTC=zero;
+      PORTB=0b10111111;
+      _delay_ms(500);    
     }
 
-    string = dtostrf(ret, 2, 0, string);
-    string2= strcat(string,"°C");
-    uart_printstrn(0, string2);
-    
-    _delay_ms(1000);
     
      }
     
