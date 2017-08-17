@@ -13,16 +13,16 @@
 
 void show7(int val){
 	if( val == 0 ){ //SCL turns off LED 7
-		PORTB |=0b01000000;
-		} else { //SCL turns on led 7
-		PORTB &=0b10111111;
+	       PORTB |=0b01000000;
+	} else { //SCL turns on led 7
+	       PORTB &=0b10111111;
 	}
 }
 
 void show6(int val){
 	if( val == 0 ){ //SCL turns off LED 6
 		PORTB |=0b00100000;
-		} else { //SCL turns on led 6
+        } else { //SCL turns on led 6
 		PORTB &=0b11011111;
 	}
 }
@@ -31,11 +31,12 @@ void displayTemp(int ack, int tem) {
 	
 	uint64_t ledDisplay;
 	
-    if (ack==1){
+        if (ack==1){ //Different patterns depending on temperature scale
 	    ledDisplay=0xffffffffffffffffUL;
 
 	}
 	else if (tem <= 20) {
+	  
 		ledDisplay=0x0000000000000000UL;
 	}
 	else if (tem <=25) {
@@ -57,9 +58,9 @@ void displayTemp(int ack, int tem) {
 		ledDisplay=0xaaaaaaaaaaaaaaaaUL;
 	}
 
-	for (int i=0;i<64;i++){
-		show6(ledDisplay & 1);
-		ledDisplay= ledDisplay >>1;
+	for (int i=0;i<64;i++){ //Display red led using bits defined above
+	        show6(ledDisplay & 1);//Get the least significant bit
+		ledDisplay= ledDisplay >>1;//Drop one position to the right in order to get the next bit
 		_delay_ms(25);	
 	}
 	
@@ -68,8 +69,8 @@ void displayTemp(int ack, int tem) {
 
 
 void monitor(void){
-	  show7( bit_is_clear(PIND,PD4) ); //SCL turns on LED 7
-	  show6( bit_is_clear(PIND,PD5) ); //SDA turns on LED 6
+       show7( bit_is_clear(PIND,PD4) ); //SCL turns on LED 7
+       show6( bit_is_clear(PIND,PD5) ); //SDA turns on LED 6
 }
  
 int main(void) {
@@ -79,54 +80,36 @@ int main(void) {
 	uint16_t temp;
 	 
 	DDRB=0x60;
-    i2c_init();    // initialize I2C library
+	i2c_init();    // initialize I2C library
 	
 
 
   while (1){
-#if 0	  
-	  PORTD=0x00; //Set as an input
 
-//		PORTB = 0x60;
-	  DDRD=(1<<4)|(1<<5); //enable internal pull ups
-	  monitor();
-	  _delay_ms(500);
-
-//		PORTB = 0x00;
-	  DDRD=(0<<4)|(0<<5); //disable internal pull ups
-	  monitor();
-	  _delay_ms(1000);
-#else
 	
 		
-		show7(1);
- 	    _delay_ms(2000);
-		show7(0);
+        show7(1); //Start flag using green led
+ 	_delay_ms(2000);	
+	show7(0);
 		
-		i2c_start(ADDR);
-		i2c_write(0x02);
-		i2c_write(0xff);
-		i2c_stop();
+	i2c_start(ADDR); //Repeated write byte protocol
+	i2c_write(0x02);//Trigger
+       	i2c_write(0xff);//Non significant values, it is just to complete the protocol	
+	i2c_stop();
 	
 		
-		ack = i2c_start(ADDR);
-		//show6(ack);
- 	    //_delay_ms(500);
-		 
-		 i2c_write(0x04);
-		 ack |=i2c_rep_start(ADDR+1);
-		 //show6(ack);
-		 //_delay_ms(500);
+	ack = i2c_start(ADDR);//Read byte protocol	 
+	i2c_write(0x04);//04 address means internal temperature MSB register
+	ack |=i2c_rep_start(ADDR+1);
 
-		 tempmsb=i2c_readAck();
-		 templsb=i2c_readNak();
-		 i2c_stop();
+	tempmsb=i2c_readAck();//Read most significant bytes
+	templsb=i2c_readNak();//Read least significant bytes
+	i2c_stop();
 
-		temp = ((tempmsb & 0x1f) << 8) | (templsb);
-		temp >>= 4; // drop 4 LSB to get value in celsius
-		 displayTemp(ack, temp);
-
-#endif	  	  
+	temp = ((tempmsb & 0x1f) << 8) | (templsb); //Concatenate both most and least significant bytes
+	temp >>= 4; // drop 4 to the right to get value in celsius because first 3 MSB are not data, see datasheet
+	displayTemp(ack, temp);
+	  
 
 	  }
 	  
